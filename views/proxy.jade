@@ -1,0 +1,24 @@
+extends layout
+
+block content
+  h1 title
+  p Welcome to #{title}
+  hr
+  div#rContents= remoteContents
+  div#rhtml
+  div#wantcontents.
+    <script>
+    (function(){
+        window.addEventListener("load",function(){
+            var rHtml = document.getElementById("rContents").innerHTML;
+            rHtml = rHtml.replace(/&gt;/g,">");
+            rHtml = rHtml.replace(/&lt;/g,"<");
+            rHtml = rHtml.replace(/<!DOCTYPE HTML>/,"");
+            rHtml = rHtml.replace(/<html(.*?)>/,"");
+            rHtml = rHtml.replace(/<\/html>/,"");
+            console.log(rHtml);
+            var elm = document.getElementById("rhtml");
+            elm.innerHTML = rHtml;
+        });
+    })();
+    </script>

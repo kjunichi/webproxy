@@ -1,0 +1,254 @@
+<!--
+Google IO 2012/2013 HTML5 Slide Template
+
+Authors: Eric Bidelman <ebidel@gmail.com>
+         Luke Mahé <lukem@google.com>
+
+URL: https://code.google.com/p/io-2012-slides
+-->
+<!DOCTYPE html>
+<html>
+<head>
+  <title></title>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <!--<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">-->
+  <!--<meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+  <!--This one seems to work all the time, but really small on ipad-->
+  <!--<meta name="viewport" content="initial-scale=0.4">-->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <link rel="stylesheet" media="all" href="theme/css/default.css">
+  <link rel="stylesheet" media="only screen and (max-device-width: 480px)" href="theme/css/phone.css">
+  <base target="_blank"> <!-- This amazingness opens all links in a new tab. -->
+  <script data-main="js/slides" src="js/require-1.0.8.min.js"></script>
+</head>
+<body style="opacity: 0">
+
+<slides class="layout-widescreen">
+
+  <slide class="title-slide segue nobackground">
+    
+    <!-- The content of this hgroup is replaced programmatically through the slide_config.json. -->
+    <hgroup class="auto-fadein">
+      <h1 data-config-title><!-- populated from slide_config.json --></h1>
+      <h2 data-config-subtitle><!-- populated from slide_config.json --></h2>
+      <p data-config-presenter><!-- populated from slide_config.json --></p>
+    </hgroup>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>開発背景</h2>
+    </hgroup>
+    <article>
+      <ul>
+      <li>iPadで外出先でも自由にネットにアクセスしたい</li>
+      <li>iPadの３G付きは維持費が掛かる</li>
+        <li>iPhone4Sを持っている</li>
+        <li>iPhone4SのSafariはWebSocketが使える</li>
+        <li>実装方法は不明だが、JBせずにテザリングの実績がある模様</li>
+      </ul>
+    </article>
+  </slide>
+
+<slide>
+    <hgroup>
+      <h2>システム概要図</h2>
+    </hgroup>
+    <article class="flexbox vcenter">
+      <img src="images/gaiyouzu.png" alt="Description" title="システム概要図">
+      <!--<footer class="source">source: place source info here</footer>-->
+    </article>
+</slide>
+
+<slide>
+    <hgroup>
+      <h2>課題その１</h2>
+    </hgroup>
+    <h3>コンパクトな機器が必要</h3>
+    <p>iPhone4Sとともに携帯することが出来るサイズで、以下が可能なもの</p>
+    <br>
+    <ul>
+        <li>node.jsを動作させることができる</li>
+        <li>無線LANのアクセスポイントになる</li>
+    </ul>
+</slide>
+
+<slide>
+    <hgroup>
+      <h2>node.jsとは</h2>
+    </hgroup>
+    <article>
+        <ul>
+            <li>サーバサイドのJavaScript</li>
+            <li>Apacheより多くのリクエストをさばける</li>
+            <li>HTTPサーバの実装が比較的容易</li>
+            <li>WebSocket通信のライブラリもいくつか存在する</li>
+            <ul>
+                <li>今回eはSocket.ioライブラリを使用</li>
+            </ul>
+        </ul>
+    </article>
+</slide>
+
+<slide>
+    <hgroup>
+      <h2>課題その１の解決</h2>
+    </hgroup>
+    <article>
+    <h2>Raspberry Piを導入</h2>
+    <br>
+    <ul>
+        <li>手のひらサイズのワンボードLinux</li>
+        <dd>iPhone,iPadの他に持ち運ぶ必要があるがこのサイズなら問題なし！</dd>
+        <li>Linuxベースなので、簡単に多くのOSSが動かせる!</li>
+    </ul>    
+    </article>
+  </slide>
+<slide>
+    <hgroup>
+      <h2>課題その２</h2>
+    </hgroup>
+    <article>
+    <ul>
+        <li>Raspberry Piの電源問題</li>
+        <ul>
+            <li>Wifiアダプター（GW-USMicro300）の消費電流</li>
+            <ul>
+                 <li>最大320mA必要</li>
+            </ul>
+            <li>Raspberry Pi本体の消費電流</li>
+            <ul>
+                <li>500mA弱程度必要</li>
+            </ul>
+            <li>乾電池4本のUSB簡易電源の出力</li>
+            <ul>
+                <li>800mA程度</li>
+            </ul>
+        </ul>
+        <p>20mA程度足りなくなる！</p>
+        <p>単3乾電池4本で駆動させ、勉強会様に動作状況を動画に収めようと
+    していたが途中で落ちてしまった。。。</p>
+    </article>
+  </slide>
+  
+  <slide>
+    <hgroup>
+      <h2>解決策</h2>
+    </hgroup>
+    <article>
+    <ul>
+    <li>USBの電源分岐のあるケーブルをつかってWifiアダプタを使う</li>
+        <ul>
+            <li>Wifiアダプタへの電源を別途用意</li>
+        </ul>
+        <li>大容量のモバイルバッテリーの導入</li>
+        <ul>
+            <li>2端子あり（1A,2.1A）</li>
+        </ul>
+    </ul>
+    </article>
+  </slide>
+  
+  <slide>
+      <hgroup>
+      <h2>課題その３</h2>
+    </hgroup>
+    <article>
+        <h3>WAN側のソフトとのiPhone4S側との同期問題</h3>
+        <p>node.jsがイベント駆動の非同期型のソリューションの為に、
+プログラム側で必要に応じて同期を取る必要がある。</p>
+<p>これまでは、シリアルに処理番号を発行していたが、
+iPhone4S側で一定時間が経過してロックが掛ると
+処理番号の振り出しがリセットされてしまう。
+これが起きると、WAN側もリセットする必要あった。</p>
+    </article>
+</slide>
+<slide>
+    <article class="flexbox vcenter">
+      <img src="images/WebSocket2Http.png" alt="Description" title="処理の同期">
+      <!--<footer class="source">source: place source info here</footer>-->
+    </article>
+</slide>
+<slide>
+    <hgroup>
+      <h2>解決策</h2>
+    </hgroup>
+    <article>
+    <h3>iPhone4S側で発行する処理番号をUUIDに変更</h3>
+    <p>UUIDは分散システム上でどこかが統制を取らずとも、一意に特定可能な識別子の作成を目的としており、
+        重複や偶然の一致が起こりえないと確信して用いることができる
+    </p>
+    <p>UUIDの生成もOSSを利用（node-uuid）</p>
+    <p>この方式を採用することにより、WAN側に複数のiPhone4Sから接続しても処理が可能となった。</p>
+    </article>
+</slide>
+  
+  <slide>
+    <hgroup>
+      <h2>動作画面イメージ（iPhone4S）</h2>
+    </hgroup>
+    <article>
+    <p>Wifiのアクセスポイントを設定して、iPhone4Sでnode.jsのアプリのURLを指定して
+    開くと表示される画面</p>
+     <img src="images/wsp_front_s.png" alt="Description" title="iPhone用設定画面">
+    </article>
+  </slide>
+<slide>
+    <hgroup>
+      <h2>動作画面イメージ（WAN側）</h2>
+    </hgroup>
+    <article>
+    <p>iPhone4Sから３G回線経由でのアクセスを受けるPCの画面</p>
+     <img src="images/wan_pc_s.png" alt="Description" title="WAN側">
+    </article>
+  </slide>
+  
+  <slide>
+    <hgroup>
+      <h2>今回のOSSに参加して</h2>
+    </hgroup>
+    <article>
+        <ul>
+            <li>Raspberry Piを購入出来た</li>
+            <ul>
+                <li>Linuxでの無線LANの周辺知識が得られた</li>
+                <li>HTML5のリモートデスクトップクラインとnoVNCの存在が分かった</li>
+                <li>SDカードのデータが飛びやすい（フツーにリブートするだけでも起こった）</li>
+            </ul>
+            <li>node.jsの勉強が出来た</li>
+            <li>HTML5の勉強が出来た(このスライドもHTML5製)</li>
+            <li>久しぶりにお酒が飲めた！(懇親会にて)</li>
+        </ul>
+    </article>
+  </slide>
+  
+  <slide class="thank-you-slide segue nobackground">
+    <aside class="gdbar right"><img src="images/nao.png"></aside>
+    <article class="flexbox vleft auto-fadein">
+      <h2>&lt;Thank You!&gt;</h2>
+    </article>
+  </slide>
+
+  <slide class="backdrop"></slide>
+
+</slides>
+
+<script>
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-XXXXXXXX-1']);
+_gaq.push(['_trackPageview']);
+
+(function() {
+  var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+  ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+  var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+})();
+</script>
+
+<!--[if IE]>
+  <script src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js"></script>
+  <script>CFInstall.check({mode: 'overlay'});</script>
+<![endif]-->
+</body>
+</html>
